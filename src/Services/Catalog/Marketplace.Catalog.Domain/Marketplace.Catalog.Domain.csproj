@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Catalog.Domain</RootNamespace>
+    <Description>Catalog domain model: Category, Brand, Product aggregates with behavior and domain events (ADR-0004). Depends only on the SharedKernel (BE-2, BE-3).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\SharedKernel\Marketplace.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>
