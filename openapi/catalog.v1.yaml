@@ -1,0 +1,649 @@
+openapi: 3.1.0
+info:
+  title: Marketplace Catalog API
+  version: 1.0.0
+  description: >-
+    Catalog bounded context: products, category taxonomy, brands, attributes, and media.
+    Price and stock are intentionally out of scope (owned by Pricing and Inventory).
+    Products are seller-owned; the taxonomy is admin-curated (ADR-0013).
+  license:
+    name: Proprietary
+servers:
+  - url: /api/v1
+    description: Versioned base path, exposed via the storefront/seller/admin BFFs.
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Categories
+  - name: Brands
+  - name: Products
+  - name: Product Images
+
+paths:
+  /categories:
+    get:
+      tags: [Categories]
+      summary: List categories
+      description: Public. Returns active categories; admins may include inactive.
+      security: []
+      parameters:
+        - { name: parentId, in: query, required: false, schema: { type: string, format: uuid }, description: Filter to children of this category. }
+        - { name: includeInactive, in: query, required: false, schema: { type: boolean, default: false }, description: Admin only. }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A page of categories.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PagedResultOfCategoryResponse' }
+    post:
+      tags: [Categories]
+      summary: Create a category
+      description: Admin only.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateCategoryRequest' }
+      responses:
+        '201':
+          description: Created.
+          headers:
+            Location: { schema: { type: string }, description: URI of the created category. }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CategoryResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /categories/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    get:
+      tags: [Categories]
+      summary: Get a category by id
+      security: []
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CategoryResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Categories]
+      summary: Update a category
+      description: Admin only.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateCategoryRequest' }
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CategoryResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+    delete:
+      tags: [Categories]
+      summary: Soft-delete a category
+      description: Admin only.
+      responses:
+        '204': { description: Deleted. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /brands:
+    get:
+      tags: [Brands]
+      summary: List brands
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A page of brands.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PagedResultOfBrandResponse' }
+    post:
+      tags: [Brands]
+      summary: Create a brand
+      description: Admin only.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateBrandRequest' }
+      responses:
+        '201':
+          description: Created.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BrandResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /brands/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    get:
+      tags: [Brands]
+      summary: Get a brand by id
+      security: []
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BrandResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Brands]
+      summary: Update a brand
+      description: Admin only.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateBrandRequest' }
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BrandResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+    delete:
+      tags: [Brands]
+      summary: Soft-delete a brand
+      description: Admin only.
+      responses:
+        '204': { description: Deleted. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /products:
+    get:
+      tags: [Products]
+      summary: Search/list products
+      description: >-
+        Public callers see only Active products. Sellers see their own products in any status;
+        admins see all. Filterable by category, seller, brand, status, and free-text query.
+      security: []
+      parameters:
+        - { name: categoryId, in: query, required: false, schema: { type: string, format: uuid } }
+        - { name: sellerId, in: query, required: false, schema: { type: string, format: uuid } }
+        - { name: brandId, in: query, required: false, schema: { type: string, format: uuid } }
+        - { name: status, in: query, required: false, schema: { $ref: '#/components/schemas/ProductStatus' } }
+        - { name: q, in: query, required: false, schema: { type: string, maxLength: 200 }, description: Free-text match on name/description. }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A page of product summaries.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PagedResultOfProductSummaryResponse' }
+    post:
+      tags: [Products]
+      summary: Create a product
+      description: Seller only. The product is owned by the authenticated seller.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateProductRequest' }
+      responses:
+        '201':
+          description: Created.
+          headers:
+            Location: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProductResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /products/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    get:
+      tags: [Products]
+      summary: Get a product by id
+      security: []
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProductResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Products]
+      summary: Update a product
+      description: Seller (own products) or Admin.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateProductRequest' }
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProductResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+    delete:
+      tags: [Products]
+      summary: Soft-delete a product
+      description: Seller (own products) or Admin.
+      responses:
+        '204': { description: Deleted. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /products/by-slug/{slug}:
+    get:
+      tags: [Products]
+      summary: Get a product by slug
+      security: []
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProductResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /products/{id}/status:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    patch:
+      tags: [Products]
+      summary: Change product status
+      description: Publish/unpublish/archive. Seller (own products) or Admin.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateProductStatusRequest' }
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProductResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /products/{id}/images:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    post:
+      tags: [Product Images]
+      summary: Add an image to a product
+      description: Seller (own products).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AddProductImageRequest' }
+      responses:
+        '201':
+          description: Image added.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProductImageResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /products/{id}/images/{imageId}:
+    delete:
+      tags: [Product Images]
+      summary: Remove a product image
+      description: Seller (own products).
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+        - { name: imageId, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Removed. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OIDC access token issued by Microsoft Entra External ID (ADR-0006).
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    Page:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    Sort:
+      name: sort
+      in: query
+      required: false
+      schema: { type: string }
+      description: 'Comma-separated fields with optional ''-'' for descending, e.g. ''-createdAtUtc,name''.'
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, format: uuid }
+      description: Client-generated key making a create operation idempotent (API-7).
+
+  responses:
+    BadRequest:
+      description: Validation failed.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    Unauthorized:
+      description: Authentication required or token invalid.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    Forbidden:
+      description: Authenticated but not permitted (RBAC / resource ownership).
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    NotFound:
+      description: Resource not found.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    Conflict:
+      description: Conflict (duplicate slug/SKU or concurrency token mismatch).
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+
+  schemas:
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error (API-4).
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        instance: { type: string }
+        traceId: { type: string }
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items: { type: string }
+      required: [title, status]
+
+    ProductStatus:
+      type: string
+      enum: [Draft, Active, Inactive, Archived]
+
+    ProductAttribute:
+      type: object
+      properties:
+        name: { type: string, maxLength: 100 }
+        value: { type: string, maxLength: 500 }
+      required: [name, value]
+
+    CategoryResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        parentCategoryId: { type: [string, 'null'], format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        description: { type: [string, 'null'] }
+        imageUrl: { type: [string, 'null'] }
+        sortOrder: { type: integer }
+        isActive: { type: boolean }
+        createdAtUtc: { type: string, format: date-time }
+        updatedAtUtc: { type: [string, 'null'], format: date-time }
+      required: [id, name, slug, sortOrder, isActive, createdAtUtc]
+
+    CreateCategoryRequest:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 150 }
+        slug: { type: [string, 'null'], maxLength: 160, description: Generated from name when omitted. }
+        parentCategoryId: { type: [string, 'null'], format: uuid }
+        description: { type: [string, 'null'], maxLength: 1000 }
+        imageUrl: { type: [string, 'null'], format: uri }
+        sortOrder: { type: integer, default: 0 }
+        isActive: { type: boolean, default: true }
+      required: [name]
+
+    UpdateCategoryRequest:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 150 }
+        parentCategoryId: { type: [string, 'null'], format: uuid }
+        description: { type: [string, 'null'], maxLength: 1000 }
+        imageUrl: { type: [string, 'null'], format: uri }
+        sortOrder: { type: integer }
+        isActive: { type: boolean }
+      required: [name, sortOrder, isActive]
+
+    BrandResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        logoUrl: { type: [string, 'null'] }
+        isActive: { type: boolean }
+        createdAtUtc: { type: string, format: date-time }
+        updatedAtUtc: { type: [string, 'null'], format: date-time }
+      required: [id, name, slug, isActive, createdAtUtc]
+
+    CreateBrandRequest:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 150 }
+        slug: { type: [string, 'null'], maxLength: 160 }
+        logoUrl: { type: [string, 'null'], format: uri }
+        isActive: { type: boolean, default: true }
+      required: [name]
+
+    UpdateBrandRequest:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 150 }
+        logoUrl: { type: [string, 'null'], format: uri }
+        isActive: { type: boolean }
+      required: [name, isActive]
+
+    ProductImageResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        url: { type: string, format: uri }
+        altText: { type: [string, 'null'] }
+        sortOrder: { type: integer }
+        isPrimary: { type: boolean }
+      required: [id, url, sortOrder, isPrimary]
+
+    AddProductImageRequest:
+      type: object
+      properties:
+        url: { type: string, format: uri }
+        altText: { type: [string, 'null'], maxLength: 250 }
+        sortOrder: { type: integer, default: 0 }
+        isPrimary: { type: boolean, default: false }
+      required: [url]
+
+    ProductSummaryResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        sellerId: { type: string, format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        categoryId: { type: string, format: uuid }
+        brandId: { type: [string, 'null'], format: uuid }
+        primaryImageUrl: { type: [string, 'null'] }
+        status: { $ref: '#/components/schemas/ProductStatus' }
+      required: [id, sellerId, name, slug, categoryId, status]
+
+    ProductResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        sellerId: { type: string, format: uuid }
+        categoryId: { type: string, format: uuid }
+        brandId: { type: [string, 'null'], format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        description: { type: string }
+        sku: { type: string }
+        status: { $ref: '#/components/schemas/ProductStatus' }
+        attributes:
+          type: array
+          items: { $ref: '#/components/schemas/ProductAttribute' }
+        images:
+          type: array
+          items: { $ref: '#/components/schemas/ProductImageResponse' }
+        createdAtUtc: { type: string, format: date-time }
+        updatedAtUtc: { type: [string, 'null'], format: date-time }
+        rowVersion: { type: string, description: Base64 concurrency token (DB-8). }
+      required: [id, sellerId, categoryId, name, slug, description, sku, status, attributes, images, createdAtUtc]
+
+    CreateProductRequest:
+      type: object
+      properties:
+        categoryId: { type: string, format: uuid }
+        brandId: { type: [string, 'null'], format: uuid }
+        name: { type: string, minLength: 1, maxLength: 250 }
+        slug: { type: [string, 'null'], maxLength: 260, description: Generated from name when omitted. }
+        description: { type: string, minLength: 1, maxLength: 4000 }
+        sku: { type: string, minLength: 1, maxLength: 64 }
+        attributes:
+          type: array
+          items: { $ref: '#/components/schemas/ProductAttribute' }
+        images:
+          type: array
+          items: { $ref: '#/components/schemas/AddProductImageRequest' }
+      required: [categoryId, name, description, sku]
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        categoryId: { type: string, format: uuid }
+        brandId: { type: [string, 'null'], format: uuid }
+        name: { type: string, minLength: 1, maxLength: 250 }
+        description: { type: string, minLength: 1, maxLength: 4000 }
+        sku: { type: string, minLength: 1, maxLength: 64 }
+        attributes:
+          type: array
+          items: { $ref: '#/components/schemas/ProductAttribute' }
+        rowVersion: { type: string, description: 'Concurrency token from the last read (DB-8, API-9).' }
+      required: [categoryId, name, description, sku, rowVersion]
+
+    UpdateProductStatusRequest:
+      type: object
+      properties:
+        status: { $ref: '#/components/schemas/ProductStatus' }
+        rowVersion: { type: string }
+      required: [status, rowVersion]
+
+    PagedResultOfCategoryResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResultBase'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/CategoryResponse' }
+          required: [items]
+
+    PagedResultOfBrandResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResultBase'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/BrandResponse' }
+          required: [items]
+
+    PagedResultOfProductSummaryResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResultBase'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/ProductSummaryResponse' }
+          required: [items]
+
+    PagedResultBase:
+      type: object
+      properties:
+        page: { type: integer }
+        pageSize: { type: integer }
+        totalCount: { type: integer, format: int64 }
+        totalPages: { type: integer }
+      required: [page, pageSize, totalCount, totalPages]
