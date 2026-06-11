@@ -1,0 +1,34 @@
+<Project>
+
+  <!--
+    Solution-wide MSBuild defaults for all .NET projects.
+    Decisions: ADR-0002 (.NET 10 LTS), ADR-0004 (Clean Architecture).
+    Rules: backend.rules.md (BE-14 nullable + warnings-as-errors).
+  -->
+
+  <PropertyGroup>
+    <!-- ADR-0002: standardize on the .NET 10 LTS runtime -->
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Quality gates (BE-14)">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Reproducibility">
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
+
+  <!-- Test projects opt out of doc/CI-only constraints via their own Directory.Build.props in tests/ (Phase 1). -->
+
+</Project>

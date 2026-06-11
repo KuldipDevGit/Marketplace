@@ -1,0 +1,76 @@
+# ---- .NET ----
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+project.lock.json
+artifacts/
+.vs/
+.vshistory/
+TestResults/
+[Cc]overage*/
+*.coverage
+*.coveragexml
+coverage.cobertura.xml
+*.trx
+BenchmarkDotNet.Artifacts/
+
+# ---- .NET Aspire ----
+**/aspire-manifest.json
+.aspire/
+
+# ---- Rider / JetBrains ----
+.idea/
+*.sln.iml
+
+# ---- Visual Studio Code ----
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+
+# ---- Node / Angular ----
+node_modules/
+dist/
+.angular/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+coverage/
+.nx/cache/
+playwright-report/
+test-results/
+blob-report/
+
+# ---- Secrets & local config (NEVER commit) ----
+*.env
+.env.*
+!.env.example
+appsettings.*.local.json
+secrets.json
+*.pfx
+*.p12
+*.pem
+*.key
+.user-secrets/
+
+# ---- Terraform / Bicep local state ----
+*.tfstate
+*.tfstate.*
+.terraform/
+*.azapi.tmp
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+desktop.ini
