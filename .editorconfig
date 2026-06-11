@@ -78,3 +78,4 @@ dotnet_naming_style.i_prefix.required_prefix = I
 # Treat key correctness analyzers as errors (see Directory.Build.props for global policy)
 dotnet_diagnostic.CA2007.severity = none      # ConfigureAwait not required in app code
 dotnet_diagnostic.CA1062.severity = suggestion # null-checks (nullable ref types cover this)
+dotnet_diagnostic.CA1716.severity = none       # cross-language keyword clashes (VB etc.) — C#-only product

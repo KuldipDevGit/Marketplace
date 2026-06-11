@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.SharedKernel</RootNamespace>
+    <Description>Domain primitives shared across bounded contexts: Entity, AggregateRoot, ValueObject, domain events, Result. No external dependencies (ADR-0004, BE-3).</Description>
+  </PropertyGroup>
+
+</Project>

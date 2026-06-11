@@ -9,7 +9,9 @@
 
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <!-- Transitive pinning intentionally OFF: it conflicts with Aspire's deep dependency tree
+         (forces downgrades). NuGet resolves transitive versions normally. -->
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
 
   <ItemGroup Label="ASP.NET Core / EF Core (.NET 10 LTS)">
@@ -40,9 +42,23 @@
     <PackageVersion Include="Stripe.net" Version="47.0.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Aspire hosting + integrations (ADR-0009)">
+    <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.4.3" />
+    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.4.3" />
+  </ItemGroup>
+
+  <ItemGroup Label="Aspire ServiceDefaults (ADR-0009 / ADR-0012)">
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
+  </ItemGroup>
+
   <ItemGroup Label="Observability (ADR-0012)">
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.3.0" />
   </ItemGroup>
 

@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Contracts</RootNamespace>
+    <Description>Versioned integration-event contracts published on the message bus. Referenced by producing and consuming services (ADR-0008, TEST-7). No external dependencies.</Description>
+  </PropertyGroup>
+
+</Project>

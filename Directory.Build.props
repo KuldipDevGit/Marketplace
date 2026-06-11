@@ -16,7 +16,9 @@
 
   <PropertyGroup Label="Quality gates (BE-14)">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- Compiler + CA analyzers fail the build; IDE *style* rules are enforced via `dotnet format`
+         in CI (testing.rules.md) rather than in-build, so generated/third-party code doesn't block. -->
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest-Recommended</AnalysisLevel>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
