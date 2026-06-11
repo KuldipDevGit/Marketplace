@@ -1,0 +1,33 @@
+# Normalize line endings: LF in the repo for all text (Linux containers + cross-OS devs).
+* text=auto eol=lf
+
+# Explicit text types
+*.cs       text eol=lf diff=csharp
+*.csproj   text eol=lf
+*.props    text eol=lf
+*.targets  text eol=lf
+*.sln      text eol=lf
+*.json     text eol=lf
+*.md       text eol=lf
+*.ts       text eol=lf
+*.js       text eol=lf
+*.html     text eol=lf
+*.scss     text eol=lf
+*.css      text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.bicep    text eol=lf
+*.sh       text eol=lf
+*.ps1      text eol=lf
+
+# Binary (never normalize)
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.pfx  binary
+*.snk  binary
+*.woff  binary
+*.woff2 binary
