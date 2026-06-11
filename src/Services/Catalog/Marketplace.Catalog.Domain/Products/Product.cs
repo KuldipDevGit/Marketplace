@@ -61,9 +61,15 @@ public sealed class Product : AuditableAggregateRoot<Guid>
         Name = name;
         Description = description;
         Sku = sku;
+        SetAttributes(attributes);
+        RaiseDomainEvent(new ProductUpdatedDomainEvent(Id, SellerId, categoryId, name, sku));
+    }
+
+    /// <summary>Replaces the product's attributes without raising an update event (used at creation time).</summary>
+    public void SetAttributes(IEnumerable<ProductAttribute> attributes)
+    {
         _attributes.Clear();
         _attributes.AddRange(attributes);
-        RaiseDomainEvent(new ProductUpdatedDomainEvent(Id, SellerId, categoryId, name, sku));
     }
 
     public void ChangeStatus(ProductStatus status)
