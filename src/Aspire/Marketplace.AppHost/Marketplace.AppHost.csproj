@@ -13,4 +13,16 @@
     <PackageReference Include="Aspire.Hosting.SqlServer" />
   </ItemGroup>
 
+  <ItemGroup Label="Security audit exception (SEC-15)">
+    <!--
+      MessagePack 2.5.192 (high severity, GHSA-hv8m-jj95-wg3x) arrives transitively via the
+      Aspire dev-host tooling. The only fix is MessagePack 3.x, a major bump that risks the
+      Aspire dashboard/DCP at runtime. The AppHost is a LOCAL orchestrator and is NOT shipped
+      to production, so this is not a shipped CVE. Full NuGet audit remains enabled everywhere
+      else (including the shipped services). Tracked by Dependabot; remove this once Aspire
+      bumps its MessagePack pin.
+    -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-hv8m-jj95-wg3x" />
+  </ItemGroup>
+
 </Project>
