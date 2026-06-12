@@ -13,6 +13,10 @@
     <PackageReference Include="Aspire.Hosting.SqlServer" />
   </ItemGroup>
 
+  <ItemGroup Label="Service projects">
+    <ProjectReference Include="..\..\Services\Catalog\Marketplace.Catalog.Api\Marketplace.Catalog.Api.csproj" />
+  </ItemGroup>
+
   <ItemGroup Label="Security audit exception (SEC-15)">
     <!--
       MessagePack 2.5.192 (high severity, GHSA-hv8m-jj95-wg3x) arrives transitively via the
