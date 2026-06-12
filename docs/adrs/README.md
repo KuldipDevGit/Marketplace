@@ -17,5 +17,6 @@ Significant architecture decisions are recorded here using the **Nygard ADR form
 | [0011](0011-edge-yarp-gateway-bff.md) | Edge — YARP Gateway + Per-App BFFs | Accepted |
 | [0012](0012-observability-opentelemetry.md) | Observability — OpenTelemetry + Azure Monitor | Accepted |
 | [0013](0013-catalog-product-ownership-and-scope.md) | Catalog Product Ownership & Scope | Accepted |
+| [0014](0014-git-workflow-and-branching.md) | Git Workflow & Branching Strategy | Accepted |
 
 **To propose a change:** copy [`template.md`](template.md) to the next sequential number, complete it, and submit for approval (see `rules/ai-agent.rules.md`, AI-4).
