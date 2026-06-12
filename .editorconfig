@@ -58,22 +58,39 @@ csharp_style_throw_expression = true:suggestion
 dotnet_style_readonly_field = true:warning
 csharp_prefer_static_local_function = true:warning
 
-# Naming: private fields -> _camelCase
-dotnet_naming_rule.private_fields_underscore.severity = warning
-dotnet_naming_rule.private_fields_underscore.symbols = private_fields
-dotnet_naming_rule.private_fields_underscore.style = underscore_prefix
-dotnet_naming_symbols.private_fields.applicable_kinds = field
-dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+# Naming styles
+dotnet_naming_style.pascal_case.capitalization = pascal_case
 dotnet_naming_style.underscore_prefix.capitalization = camel_case
 dotnet_naming_style.underscore_prefix.required_prefix = _
-
-# Naming: interfaces -> IPascalCase
-dotnet_naming_rule.interfaces_i_prefix.severity = warning
-dotnet_naming_rule.interfaces_i_prefix.symbols = interfaces
-dotnet_naming_rule.interfaces_i_prefix.style = i_prefix
-dotnet_naming_symbols.interfaces.applicable_kinds = interface
 dotnet_naming_style.i_prefix.capitalization = pascal_case
 dotnet_naming_style.i_prefix.required_prefix = I
+
+# Constants -> PascalCase (declared before the private-field rule so consts match here first)
+dotnet_naming_symbols.constant_fields.applicable_kinds = field
+dotnet_naming_symbols.constant_fields.required_modifiers = const
+dotnet_naming_rule.constant_fields_pascal.symbols = constant_fields
+dotnet_naming_rule.constant_fields_pascal.style = pascal_case
+dotnet_naming_rule.constant_fields_pascal.severity = warning
+
+# Static readonly fields -> PascalCase (declared before the private-field rule)
+dotnet_naming_symbols.static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.static_readonly_fields.required_modifiers = static,readonly
+dotnet_naming_rule.static_readonly_fields_pascal.symbols = static_readonly_fields
+dotnet_naming_rule.static_readonly_fields_pascal.style = pascal_case
+dotnet_naming_rule.static_readonly_fields_pascal.severity = warning
+
+# Private instance fields -> _camelCase
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_prefix
+dotnet_naming_rule.private_fields_underscore.severity = warning
+
+# Interfaces -> IPascalCase
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_rule.interfaces_i_prefix.symbols = interfaces
+dotnet_naming_rule.interfaces_i_prefix.style = i_prefix
+dotnet_naming_rule.interfaces_i_prefix.severity = warning
 
 # Treat key correctness analyzers as errors (see Directory.Build.props for global policy)
 dotnet_diagnostic.CA2007.severity = none      # ConfigureAwait not required in app code
