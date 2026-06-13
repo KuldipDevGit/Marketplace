@@ -1,6 +1,6 @@
 # ADR-0014: Git Workflow & Branching Strategy
 
-- **Status:** Accepted
+- **Status:** Superseded by [ADR-0016](0016-add-dev-integration-branch.md)
 - **Date:** 2026-06-12
 - **Deciders:** Product owner, Lead Architect
 
