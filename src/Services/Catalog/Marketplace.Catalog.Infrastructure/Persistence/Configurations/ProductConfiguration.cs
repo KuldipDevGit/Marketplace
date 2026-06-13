@@ -25,6 +25,10 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasIndex(p => p.CategoryId);
         builder.HasIndex(p => p.BrandId);
 
+        // Serves the storefront's hot read path — filter by Status, order by CreatedAtUtc descending,
+        // paged — as an index range scan with no separate sort (audit / Big-O).
+        builder.HasIndex(p => new { p.Status, p.CreatedAtUtc }).IsDescending(false, true);
+
         builder.HasQueryFilter(p => !p.IsDeleted);
 
         builder.OwnsMany(p => p.Images, image =>
