@@ -14,11 +14,9 @@ public sealed class BrandsController(ISender mediator) : ControllerBase
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<PagedResult<BrandDto>>> List(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        [FromQuery] string? sort = null,
-        CancellationToken cancellationToken = default) =>
-        Ok(await mediator.Send(new ListBrandsQuery(page, pageSize, sort), cancellationToken));
+        [FromQuery] PagedQueryParameters query,
+        CancellationToken cancellationToken) =>
+        Ok(await mediator.Send(new ListBrandsQuery(query.Page, query.PageSize, query.Sort), cancellationToken));
 
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
