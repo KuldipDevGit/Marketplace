@@ -1,0 +1,14 @@
+@let p = product();
+<a class="product-card" [routerLink]="['/product', p.id]">
+  <div class="product-card__media">
+    @if (p.primaryImageUrl) {
+      <img [src]="p.primaryImageUrl" [alt]="p.name" loading="lazy" />
+    } @else {
+      <span class="product-card__noimg" aria-hidden="true">No image</span>
+    }
+  </div>
+  <div class="product-card__body">
+    <h3 class="product-card__title">{{ p.name }}</h3>
+    <p-tag [value]="p.status" severity="success" />
+  </div>
+</a>

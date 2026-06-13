@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: var(--p-content-background, #f8f9fa);
+  color: var(--p-text-color, #1f2937);
+}
+
+.app-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--p-primary-color, #10b981);
+  color: var(--p-primary-contrast-color, #fff);
+}
+
+.app-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-tagline {
+  opacity: 0.85;
+  font-size: 0.875rem;
+}
+
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}

@@ -1,0 +1,25 @@
+.catalog-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.catalog-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.catalog-state {
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--p-text-muted-color, #6b7280);
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}

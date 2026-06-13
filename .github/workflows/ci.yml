@@ -37,3 +37,29 @@ jobs:
 
       - name: Test
         run: dotnet test Marketplace.sln --configuration Release --no-build --verbosity normal
+
+  frontend:
+    name: Frontend (build & test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install (clean)
+        run: npm ci
+
+      - name: Build (production, bundle budgets enforced)
+        run: npm run build -- --configuration production
+
+      - name: Test (headless)
+        run: npm test -- --watch=false
