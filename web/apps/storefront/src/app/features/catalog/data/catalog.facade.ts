@@ -33,6 +33,7 @@ export class CatalogFacade {
   loadCategories(): void {
     this.api.categoriesGET(undefined, undefined, 1, 100, 'sortOrder,name').subscribe({
       next: (page) => this._categories.set(page.items ?? []),
+      error: () => this._categories.set([]),
     });
   }
 
