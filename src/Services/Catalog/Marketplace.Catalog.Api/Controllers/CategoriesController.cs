@@ -14,13 +14,11 @@ public sealed class CategoriesController(ISender mediator) : ControllerBase
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<PagedResult<CategoryDto>>> List(
-        [FromQuery] Guid? parentId,
-        [FromQuery] bool includeInactive = false,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        [FromQuery] string? sort = null,
-        CancellationToken cancellationToken = default) =>
-        Ok(await mediator.Send(new ListCategoriesQuery(parentId, includeInactive, page, pageSize, sort), cancellationToken));
+        [FromQuery] ListCategoriesParameters query,
+        CancellationToken cancellationToken) =>
+        Ok(await mediator.Send(
+            new ListCategoriesQuery(query.ParentId, query.IncludeInactive, query.Page, query.PageSize, query.Sort),
+            cancellationToken));
 
     [HttpGet("{id:guid}")]
     [AllowAnonymous]

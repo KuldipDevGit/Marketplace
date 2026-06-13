@@ -15,16 +15,11 @@ public sealed class ProductsController(ISender mediator) : ControllerBase
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<PagedResult<ProductSummaryDto>>> List(
-        [FromQuery] Guid? categoryId,
-        [FromQuery] Guid? sellerId,
-        [FromQuery] Guid? brandId,
-        [FromQuery] ProductStatus? status,
-        [FromQuery] string? q,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        [FromQuery] string? sort = null,
-        CancellationToken cancellationToken = default) =>
-        Ok(await mediator.Send(new ListProductsQuery(categoryId, sellerId, brandId, status, q, page, pageSize, sort), cancellationToken));
+        [FromQuery] ListProductsParameters query,
+        CancellationToken cancellationToken) =>
+        Ok(await mediator.Send(
+            new ListProductsQuery(query.CategoryId, query.SellerId, query.BrandId, query.Status, query.Q, query.Page, query.PageSize, query.Sort),
+            cancellationToken));
 
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
