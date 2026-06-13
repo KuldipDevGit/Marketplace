@@ -57,6 +57,7 @@ if (app.Environment.IsDevelopment())
     app.MapGet("/", () => Results.Redirect("/scalar")).ExcludeFromDescription();
 
     await app.MigrateCatalogDatabaseAsync();
+    await app.SeedCatalogDevelopmentDataAsync();
 }
 
 app.UseAuthentication();
