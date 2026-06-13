@@ -21,4 +21,18 @@ internal static class ProductAuthorization
 
         throw new ForbiddenException("You do not have permission to modify this product.");
     }
+
+    /// <summary>
+    /// Read visibility (SEC-6): everyone sees Active products; admins see any status; a seller sees
+    /// their own listings in any status. Mirrors the list-query rule so detail and list stay consistent.
+    /// </summary>
+    public static bool CanView(ICurrentUser user, ProductStatus status, Guid sellerId)
+    {
+        if (status == ProductStatus.Active || user.IsAdmin)
+        {
+            return true;
+        }
+
+        return user.SellerId is { } sellerId2 && sellerId == sellerId2;
+    }
 }
