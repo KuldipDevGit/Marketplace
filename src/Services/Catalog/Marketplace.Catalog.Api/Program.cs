@@ -5,6 +5,7 @@ using Marketplace.Catalog.Application.Abstractions;
 using Marketplace.Catalog.Infrastructure;
 using Marketplace.Observability;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,12 @@ app.UseMarketplaceCorrelationId();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    // Interactive API reference (Scalar) at /scalar, with the site root redirecting to it.
+    // Development only — the service is a headless JSON API in production (API-1).
+    app.MapScalarApiReference();
+    app.MapGet("/", () => Results.Redirect("/scalar")).ExcludeFromDescription();
+
     await app.MigrateCatalogDatabaseAsync();
 }
 
