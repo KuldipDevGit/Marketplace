@@ -1,0 +1,14 @@
+/* Global resets. The PrimeNG Aura theme + design tokens are provided at runtime via
+   providePrimeNG() in app.config.ts (FE-9), so no theme stylesheet import is needed here. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}

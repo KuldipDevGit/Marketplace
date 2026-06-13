@@ -31,6 +31,18 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddOpenApi();
 
+// Allow the local Angular storefront dev server (ng serve) to call the API during development;
+// expose the correlation id so the SPA's error handler can surface it (FE-14). Production serves
+// the SPA same-origin behind the gateway, so no cross-origin policy is applied there.
+const string StorefrontDevCors = "storefront-dev";
+builder.Services.AddCors(options => options.AddPolicy(
+    StorefrontDevCors,
+    policy => policy
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithExposedHeaders(CorrelationIdMiddleware.HeaderName)));
+
 // Authentication via Microsoft Entra External ID; configuration is environment-supplied (ADR-0006).
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -49,6 +61,7 @@ app.UseMarketplaceCorrelationId();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors(StorefrontDevCors);
     app.MapOpenApi();
 
     // Interactive API reference (Scalar) at /scalar, with the site root redirecting to it.

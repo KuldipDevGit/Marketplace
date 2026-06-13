@@ -1,0 +1,22 @@
+<section class="catalog">
+  <header class="catalog-toolbar">
+    <h1 class="catalog-title">Products</h1>
+    <app-category-nav
+      [categories]="categories()"
+      [selectedId]="selectedCategoryId()"
+      (categoryChange)="onCategoryChange($event)"
+    />
+  </header>
+
+  @if (loading()) {
+    <p class="catalog-state">Loading…</p>
+  } @else if (products().length === 0) {
+    <p class="catalog-state">No products found.</p>
+  } @else {
+    <div class="catalog-grid">
+      @for (product of products(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,32 @@
+<a routerLink="/" class="back-link">← Back to products</a>
+
+@if (loading()) {
+  <p class="detail-state">Loading…</p>
+} @else if (product(); as p) {
+  <article class="detail">
+    <div class="detail__media">
+      @let primary = primaryImage(p);
+      @if (primary) {
+        <img [src]="primary.url" [alt]="primary.altText ?? p.name" />
+      } @else {
+        <span class="detail__noimg" aria-hidden="true">No image</span>
+      }
+    </div>
+    <div class="detail__body">
+      <h1 class="detail__title">{{ p.name }}</h1>
+      <p-tag [value]="p.status" severity="success" />
+      <p class="detail__sku">SKU: {{ p.sku }}</p>
+      <p class="detail__description">{{ p.description }}</p>
+      @if (p.attributes.length) {
+        <h2 class="detail__subhead">Specifications</h2>
+        <ul class="detail__attrs">
+          @for (attr of p.attributes; track attr.name) {
+            <li><span>{{ attr.name }}</span><span>{{ attr.value }}</span></li>
+          }
+        </ul>
+      }
+    </div>
+  </article>
+} @else {
+  <p class="detail-state">Product not found.</p>
+}
