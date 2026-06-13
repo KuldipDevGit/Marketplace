@@ -32,9 +32,19 @@ public static class DependencyInjection
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
-        var messaging = configuration.GetConnectionString("messaging")
-            ?? throw new InvalidOperationException("Connection string 'messaging' is not configured.");
-        services.AddMarketplaceMessaging<CatalogDbContext>(messaging);
+        // When a broker connection string is configured (Aspire/production), publish integration
+        // events over RabbitMQ with the transactional outbox. For standalone local development no
+        // broker is available, so fall back to the in-memory transport — keeping the app fully
+        // runnable against LocalDB with no Docker (ADR-0008).
+        var messaging = configuration.GetConnectionString("messaging");
+        if (string.IsNullOrWhiteSpace(messaging))
+        {
+            services.AddMarketplaceMessagingInMemory();
+        }
+        else
+        {
+            services.AddMarketplaceMessaging<CatalogDbContext>(messaging);
+        }
 
         return services;
     }
