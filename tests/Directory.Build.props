@@ -6,8 +6,9 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <!-- CA1707: underscores in test names; CA1515: public test classes; CA1062: arg null-checks. -->
-    <NoWarn>$(NoWarn);CA1707;CA1515;CA1062</NoWarn>
+    <!-- Relax rules that clash with test conventions: CA1707 underscores in test names;
+         CA1515 public test classes; CA1062 arg null-checks; CA1711 xUnit 'Collection' suffix. -->
+    <NoWarn>$(NoWarn);CA1707;CA1515;CA1062;CA1711</NoWarn>
   </PropertyGroup>
 
 </Project>

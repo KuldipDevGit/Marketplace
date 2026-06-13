@@ -23,4 +23,8 @@
     <PackageReference Include="System.Security.Cryptography.Xml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Marketplace.Catalog.IntegrationTests" />
+  </ItemGroup>
+
 </Project>
