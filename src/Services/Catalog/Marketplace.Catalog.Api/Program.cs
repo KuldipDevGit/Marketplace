@@ -29,7 +29,7 @@ builder.Services
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 
 // Allow the local Angular storefront dev server (ng serve) to call the API during development;
 // expose the correlation id so the SPA's error handler can surface it (FE-14). Production serves
@@ -80,3 +80,6 @@ app.MapControllers();
 app.MapDefaultEndpoints();
 
 app.Run();
+
+// Exposed so the functional test project can boot the API via WebApplicationFactory<Program>.
+public partial class Program { }

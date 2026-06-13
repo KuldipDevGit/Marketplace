@@ -3,6 +3,8 @@
   <PropertyGroup>
     <RootNamespace>Marketplace.Catalog.Api</RootNamespace>
     <Description>Catalog HTTP API: controllers implementing the OpenAPI contract, Entra JWT auth, ProblemDetails, health, and OpenTelemetry via ServiceDefaults (ADR-0011, api.rules.md).</Description>
+    <!-- Enables `dotnet user-jwts` for local dev tokens; the signing key lives in user-secrets, never in the repo (SEC-9). -->
+    <UserSecretsId>b9e1c7a4-2f63-4d8e-9a05-7c1e3f6b2d40</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
