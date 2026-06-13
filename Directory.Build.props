@@ -27,7 +27,8 @@
   <PropertyGroup Label="Reproducibility">
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- InvariantGlobalization must stay false: Microsoft.Data.SqlClient (SQL Server) does not
+         support invariant-globalization mode and throws when opening a connection. -->
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
