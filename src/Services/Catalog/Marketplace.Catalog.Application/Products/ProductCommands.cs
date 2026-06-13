@@ -123,9 +123,7 @@ public sealed class UpdateProductHandler(
 {
     public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await products.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new NotFoundException($"Product '{request.Id}' was not found.");
-        ProductAuthorization.EnsureCanModify(currentUser, product);
+        var product = await ProductCommandGuards.LoadModifiableAsync(products, currentUser, request.Id, cancellationToken);
 
         if (request.CategoryId != product.CategoryId && !await categories.ExistsAsync(request.CategoryId, cancellationToken))
         {
@@ -136,17 +134,7 @@ public sealed class UpdateProductHandler(
         product.UpdateDetails(
             request.CategoryId, request.BrandId, request.Name, request.Description, request.Sku,
             request.Attributes.Select(a => new ProductAttribute(a.Name, a.Value)));
-        await publisher.PublishAsync(
-            new ProductUpdatedIntegrationEvent
-            {
-                ProductId = product.Id,
-                SellerId = product.SellerId,
-                CategoryId = product.CategoryId,
-                Name = product.Name,
-                Sku = product.Sku,
-                OccurredOnUtc = clock.GetUtcNow().UtcDateTime,
-            },
-            cancellationToken);
+        await publisher.PublishAsync(ProductCommandGuards.ProductUpdated(product, clock), cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
@@ -174,9 +162,7 @@ public sealed class UpdateProductStatusHandler(
 {
     public async Task Handle(UpdateProductStatusCommand request, CancellationToken cancellationToken)
     {
-        var product = await products.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new NotFoundException($"Product '{request.Id}' was not found.");
-        ProductAuthorization.EnsureCanModify(currentUser, product);
+        var product = await ProductCommandGuards.LoadModifiableAsync(products, currentUser, request.Id, cancellationToken);
 
         products.SetOriginalRowVersion(product, request.RowVersion);
         product.ChangeStatus(request.Status);
@@ -206,9 +192,7 @@ public sealed class DeleteProductHandler(
 {
     public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await products.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new NotFoundException($"Product '{request.Id}' was not found.");
-        ProductAuthorization.EnsureCanModify(currentUser, product);
+        var product = await ProductCommandGuards.LoadModifiableAsync(products, currentUser, request.Id, cancellationToken);
 
         product.Delete();
         await publisher.PublishAsync(
@@ -237,16 +221,21 @@ public sealed class AddProductImageValidator : AbstractValidator<AddProductImage
     }
 }
 
-public sealed class AddProductImageHandler(IProductRepository products, ICurrentUser currentUser, IUnitOfWork unitOfWork)
-    : IRequestHandler<AddProductImageCommand, Guid>
+public sealed class AddProductImageHandler(
+    IProductRepository products,
+    ICurrentUser currentUser,
+    IUnitOfWork unitOfWork,
+    IIntegrationEventPublisher publisher,
+    TimeProvider clock) : IRequestHandler<AddProductImageCommand, Guid>
 {
     public async Task<Guid> Handle(AddProductImageCommand request, CancellationToken cancellationToken)
     {
-        var product = await products.GetByIdAsync(request.ProductId, cancellationToken)
-            ?? throw new NotFoundException($"Product '{request.ProductId}' was not found.");
-        ProductAuthorization.EnsureCanModify(currentUser, product);
+        var product = await ProductCommandGuards.LoadModifiableAsync(products, currentUser, request.ProductId, cancellationToken);
 
         var image = product.AddImage(Guid.NewGuid(), request.Url, request.AltText, request.SortOrder, request.IsPrimary);
+        // An image change alters the product's display (e.g. its primary image); signal a product update
+        // so read models stay current, consistent with the other product mutations.
+        await publisher.PublishAsync(ProductCommandGuards.ProductUpdated(product, clock), cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return image.Id;
@@ -257,16 +246,47 @@ public sealed class AddProductImageHandler(IProductRepository products, ICurrent
 
 public sealed record RemoveProductImageCommand(Guid ProductId, Guid ImageId) : IRequest;
 
-public sealed class RemoveProductImageHandler(IProductRepository products, ICurrentUser currentUser, IUnitOfWork unitOfWork)
-    : IRequestHandler<RemoveProductImageCommand>
+public sealed class RemoveProductImageHandler(
+    IProductRepository products,
+    ICurrentUser currentUser,
+    IUnitOfWork unitOfWork,
+    IIntegrationEventPublisher publisher,
+    TimeProvider clock) : IRequestHandler<RemoveProductImageCommand>
 {
     public async Task Handle(RemoveProductImageCommand request, CancellationToken cancellationToken)
     {
-        var product = await products.GetByIdAsync(request.ProductId, cancellationToken)
-            ?? throw new NotFoundException($"Product '{request.ProductId}' was not found.");
-        ProductAuthorization.EnsureCanModify(currentUser, product);
+        var product = await ProductCommandGuards.LoadModifiableAsync(products, currentUser, request.ProductId, cancellationToken);
 
         product.RemoveImage(request.ImageId);
+        await publisher.PublishAsync(ProductCommandGuards.ProductUpdated(product, clock), cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
+}
+
+/// <summary>Shared guards/builders for the product write handlers, so the load-authorize preamble lives once.</summary>
+internal static class ProductCommandGuards
+{
+    /// <summary>Loads a product for a write command, throwing if it is missing or the caller may not modify it.</summary>
+    public static async Task<Product> LoadModifiableAsync(
+        IProductRepository products,
+        ICurrentUser currentUser,
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var product = await products.GetByIdAsync(id, cancellationToken)
+            ?? throw new NotFoundException($"Product '{id}' was not found.");
+        ProductAuthorization.EnsureCanModify(currentUser, product);
+        return product;
+    }
+
+    /// <summary>Builds the "product updated" integration event from the current product state.</summary>
+    public static ProductUpdatedIntegrationEvent ProductUpdated(Product product, TimeProvider clock) => new()
+    {
+        ProductId = product.Id,
+        SellerId = product.SellerId,
+        CategoryId = product.CategoryId,
+        Name = product.Name,
+        Sku = product.Sku,
+        OccurredOnUtc = clock.GetUtcNow().UtcDateTime,
+    };
 }

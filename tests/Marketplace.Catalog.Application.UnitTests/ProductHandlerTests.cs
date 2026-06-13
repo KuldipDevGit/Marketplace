@@ -105,3 +105,79 @@ public class DeleteProductHandlerTests
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }
+
+public class GetProductByIdHandlerTests
+{
+    private readonly IProductRepository _products = Substitute.For<IProductRepository>();
+    private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
+    private readonly GetProductByIdHandler _handler;
+
+    public GetProductByIdHandlerTests() => _handler = new GetProductByIdHandler(_products, _currentUser);
+
+    private static ProductDto Dto(Guid sellerId, ProductStatus status) =>
+        new(Guid.NewGuid(), sellerId, Guid.NewGuid(), null, "Widget", "widget", "A widget", "SKU-1", status, [], [], DateTime.UtcNow, null, "AAAA");
+
+    private Task<ProductDto> Handle(ProductDto dto)
+    {
+        _products.GetDtoByIdAsync(dto.Id, Arg.Any<CancellationToken>()).Returns(dto);
+        return _handler.Handle(new GetProductByIdQuery(dto.Id), CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task Anonymous_caller_sees_an_active_product()
+    {
+        var dto = Dto(Guid.NewGuid(), ProductStatus.Active);
+
+        (await Handle(dto)).Should().Be(dto);
+    }
+
+    [Fact]
+    public async Task Anonymous_caller_cannot_see_a_draft_product()
+    {
+        _currentUser.IsAdmin.Returns(false);
+        _currentUser.SellerId.Returns((Guid?)null);
+
+        var act = () => Handle(Dto(Guid.NewGuid(), ProductStatus.Draft));
+
+        await act.Should().ThrowAsync<NotFoundException>();
+    }
+
+    [Fact]
+    public async Task An_admin_sees_a_draft_product()
+    {
+        _currentUser.IsAdmin.Returns(true);
+
+        (await Handle(Dto(Guid.NewGuid(), ProductStatus.Draft))).Status.Should().Be(ProductStatus.Draft);
+    }
+
+    [Fact]
+    public async Task A_seller_sees_their_own_draft_product()
+    {
+        var sellerId = Guid.NewGuid();
+        _currentUser.IsAdmin.Returns(false);
+        _currentUser.SellerId.Returns(sellerId);
+
+        (await Handle(Dto(sellerId, ProductStatus.Draft))).SellerId.Should().Be(sellerId);
+    }
+
+    [Fact]
+    public async Task A_seller_cannot_see_another_sellers_draft_product()
+    {
+        _currentUser.IsAdmin.Returns(false);
+        _currentUser.SellerId.Returns(Guid.NewGuid());
+
+        var act = () => Handle(Dto(Guid.NewGuid(), ProductStatus.Draft));
+
+        await act.Should().ThrowAsync<NotFoundException>();
+    }
+
+    [Fact]
+    public async Task Missing_product_is_not_found()
+    {
+        _products.GetDtoByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns((ProductDto?)null);
+
+        var act = () => _handler.Handle(new GetProductByIdQuery(Guid.NewGuid()), CancellationToken.None);
+
+        await act.Should().ThrowAsync<NotFoundException>();
+    }
+}
