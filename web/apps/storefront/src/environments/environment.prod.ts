@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  // Production serves the SPA behind the API gateway; calls are same-origin relative paths.
-  apiBaseUrl: '',
+  // Same-origin behind the API gateway, which routes /api/v1 to the Catalog service.
+  apiBaseUrl: '/api/v1',
 };

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  // Catalog API (standalone local run on LocalDB). The dev server proxies nothing — the SPA calls
-  // this origin directly, so the API enables a Development CORS policy for http://localhost:4200.
-  apiBaseUrl: 'http://localhost:58118',
+  // Catalog API base — includes the OpenAPI `servers` base path (/api/v1); the generated client
+  // appends resource paths (e.g. /products) to this. The API allows CORS from http://localhost:4200.
+  apiBaseUrl: 'http://localhost:58118/api/v1',
 };
