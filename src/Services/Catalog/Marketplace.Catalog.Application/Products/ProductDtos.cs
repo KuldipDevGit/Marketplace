@@ -2,35 +2,50 @@ using Marketplace.Catalog.Domain.Products;
 
 namespace Marketplace.Catalog.Application.Products;
 
-public sealed record ProductAttributeDto(string Name, string Value);
+public sealed class ProductAttributeDto
+{
+    public required string Name { get; set; }
+    public required string Value { get; set; }
+}
 
-public sealed record ProductImageDto(Guid Id, string Url, string? AltText, int SortOrder, bool IsPrimary);
+public sealed class ProductImageDto
+{
+    public Guid Id { get; set; }
+    public required string Url { get; set; }
+    public string? AltText { get; set; }
+    public int SortOrder { get; set; }
+    public bool IsPrimary { get; set; }
+}
 
-public sealed record ProductSummaryDto(
-    Guid Id,
-    Guid SellerId,
-    string Name,
-    string Slug,
-    Guid CategoryId,
-    Guid? BrandId,
-    string? PrimaryImageUrl,
-    ProductStatus Status);
+public sealed class ProductSummaryDto
+{
+    public Guid Id { get; set; }
+    public Guid SellerId { get; set; }
+    public required string Name { get; set; }
+    public required string Slug { get; set; }
+    public Guid CategoryId { get; set; }
+    public Guid? BrandId { get; set; }
+    public string? PrimaryImageUrl { get; set; }
+    public ProductStatus Status { get; set; }
+}
 
-public sealed record ProductDto(
-    Guid Id,
-    Guid SellerId,
-    Guid CategoryId,
-    Guid? BrandId,
-    string Name,
-    string Slug,
-    string Description,
-    string Sku,
-    ProductStatus Status,
-    IReadOnlyList<ProductAttributeDto> Attributes,
-    IReadOnlyList<ProductImageDto> Images,
-    DateTime CreatedAtUtc,
-    DateTime? UpdatedAtUtc,
-    string RowVersion);
+public sealed class ProductDto
+{
+    public Guid Id { get; set; }
+    public Guid SellerId { get; set; }
+    public Guid CategoryId { get; set; }
+    public Guid? BrandId { get; set; }
+    public required string Name { get; set; }
+    public required string Slug { get; set; }
+    public required string Description { get; set; }
+    public required string Sku { get; set; }
+    public ProductStatus Status { get; set; }
+    public required IReadOnlyList<ProductAttributeDto> Attributes { get; set; }
+    public required IReadOnlyList<ProductImageDto> Images { get; set; }
+    public DateTime CreatedAtUtc { get; set; }
+    public DateTime? UpdatedAtUtc { get; set; }
+    public required string RowVersion { get; set; }
+}
 
 /// <summary>Filter + paging options for listing products. Visibility is resolved by the handler from the caller (SEC-6).</summary>
 public sealed record ProductListFilter(

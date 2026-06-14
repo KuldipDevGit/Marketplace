@@ -114,8 +114,21 @@ public class GetProductByIdHandlerTests
 
     public GetProductByIdHandlerTests() => _handler = new GetProductByIdHandler(_products, _currentUser);
 
-    private static ProductDto Dto(Guid sellerId, ProductStatus status) =>
-        new(Guid.NewGuid(), sellerId, Guid.NewGuid(), null, "Widget", "widget", "A widget", "SKU-1", status, [], [], DateTime.UtcNow, null, "AAAA");
+    private static ProductDto Dto(Guid sellerId, ProductStatus status) => new()
+    {
+        Id = Guid.NewGuid(),
+        SellerId = sellerId,
+        CategoryId = Guid.NewGuid(),
+        Name = "Widget",
+        Slug = "widget",
+        Description = "A widget",
+        Sku = "SKU-1",
+        Status = status,
+        Attributes = [],
+        Images = [],
+        CreatedAtUtc = DateTime.UtcNow,
+        RowVersion = "AAAA",
+    };
 
     private Task<ProductDto> Handle(ProductDto dto)
     {
