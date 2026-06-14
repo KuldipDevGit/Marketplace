@@ -42,7 +42,7 @@ public sealed class ProductsController(ISender mediator) : ControllerBase
             request.Slug,
             request.Description,
             request.Sku,
-            (request.Attributes ?? []).Select(a => new ProductAttributeDto(a.Name, a.Value)).ToList(),
+            (request.Attributes ?? []).Select(a => new ProductAttributeDto { Name = a.Name, Value = a.Value }).ToList(),
             (request.Images ?? []).Select(i => new NewProductImage(i.Url, i.AltText, i.SortOrder, i.IsPrimary)).ToList());
 
         var id = await mediator.Send(command, cancellationToken);
@@ -61,7 +61,7 @@ public sealed class ProductsController(ISender mediator) : ControllerBase
             request.Name,
             request.Description,
             request.Sku,
-            (request.Attributes ?? []).Select(a => new ProductAttributeDto(a.Name, a.Value)).ToList(),
+            (request.Attributes ?? []).Select(a => new ProductAttributeDto { Name = a.Name, Value = a.Value }).ToList(),
             Convert.FromBase64String(request.RowVersion));
 
         await mediator.Send(command, cancellationToken);

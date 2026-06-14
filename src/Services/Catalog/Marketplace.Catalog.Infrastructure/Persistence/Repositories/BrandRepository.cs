@@ -9,8 +9,16 @@ namespace Marketplace.Catalog.Infrastructure.Persistence.Repositories;
 
 internal sealed class BrandRepository(CatalogDbContext db) : IBrandRepository
 {
-    private static readonly Expression<Func<Brand, BrandDto>> ToDto = b => new BrandDto(
-        b.Id, b.Name, b.Slug, b.LogoUrl, b.IsActive, b.CreatedAtUtc, b.UpdatedAtUtc);
+    private static readonly Expression<Func<Brand, BrandDto>> ToDto = b => new BrandDto
+    {
+        Id = b.Id,
+        Name = b.Name,
+        Slug = b.Slug,
+        LogoUrl = b.LogoUrl,
+        IsActive = b.IsActive,
+        CreatedAtUtc = b.CreatedAtUtc,
+        UpdatedAtUtc = b.UpdatedAtUtc,
+    };
 
     public Task<Brand?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
         db.Brands.FirstOrDefaultAsync(b => b.Id == id, cancellationToken);

@@ -9,15 +9,17 @@ namespace Marketplace.Catalog.Infrastructure.Persistence.Repositories;
 
 internal sealed class ProductRepository(CatalogDbContext db) : IProductRepository
 {
-    private static readonly Expression<Func<Product, ProductSummaryDto>> ToSummary = p => new ProductSummaryDto(
-        p.Id,
-        p.SellerId,
-        p.Name,
-        p.Slug,
-        p.CategoryId,
-        p.BrandId,
-        p.Images.Where(i => i.IsPrimary).Select(i => i.Url).FirstOrDefault(),
-        p.Status);
+    private static readonly Expression<Func<Product, ProductSummaryDto>> ToSummary = p => new ProductSummaryDto
+    {
+        Id = p.Id,
+        SellerId = p.SellerId,
+        Name = p.Name,
+        Slug = p.Slug,
+        CategoryId = p.CategoryId,
+        BrandId = p.BrandId,
+        PrimaryImageUrl = p.Images.Where(i => i.IsPrimary).Select(i => i.Url).FirstOrDefault(),
+        Status = p.Status,
+    };
 
     public Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
         db.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
@@ -87,19 +89,21 @@ internal sealed class ProductRepository(CatalogDbContext db) : IProductRepositor
         return new PagedResult<ProductSummaryDto>(items, filter.Page, filter.PageSize, total);
     }
 
-    private static ProductDto ToDto(Product p) => new(
-        p.Id,
-        p.SellerId,
-        p.CategoryId,
-        p.BrandId,
-        p.Name,
-        p.Slug,
-        p.Description,
-        p.Sku,
-        p.Status,
-        p.Attributes.Select(a => new ProductAttributeDto(a.Name, a.Value)).ToList(),
-        p.Images.OrderBy(i => i.SortOrder).Select(i => new ProductImageDto(i.Id, i.Url, i.AltText, i.SortOrder, i.IsPrimary)).ToList(),
-        p.CreatedAtUtc,
-        p.UpdatedAtUtc,
-        Convert.ToBase64String(p.RowVersion));
+    private static ProductDto ToDto(Product p) => new()
+    {
+        Id = p.Id,
+        SellerId = p.SellerId,
+        CategoryId = p.CategoryId,
+        BrandId = p.BrandId,
+        Name = p.Name,
+        Slug = p.Slug,
+        Description = p.Description,
+        Sku = p.Sku,
+        Status = p.Status,
+        Attributes = p.Attributes.Select(a => new ProductAttributeDto { Name = a.Name, Value = a.Value }).ToList(),
+        Images = p.Images.OrderBy(i => i.SortOrder).Select(i => new ProductImageDto { Id = i.Id, Url = i.Url, AltText = i.AltText, SortOrder = i.SortOrder, IsPrimary = i.IsPrimary }).ToList(),
+        CreatedAtUtc = p.CreatedAtUtc,
+        UpdatedAtUtc = p.UpdatedAtUtc,
+        RowVersion = Convert.ToBase64String(p.RowVersion),
+    };
 }

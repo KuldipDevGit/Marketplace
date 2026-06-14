@@ -9,8 +9,19 @@ namespace Marketplace.Catalog.Infrastructure.Persistence.Repositories;
 
 internal sealed class CategoryRepository(CatalogDbContext db) : ICategoryRepository
 {
-    private static readonly Expression<Func<Category, CategoryDto>> ToDto = c => new CategoryDto(
-        c.Id, c.ParentCategoryId, c.Name, c.Slug, c.Description, c.ImageUrl, c.SortOrder, c.IsActive, c.CreatedAtUtc, c.UpdatedAtUtc);
+    private static readonly Expression<Func<Category, CategoryDto>> ToDto = c => new CategoryDto
+    {
+        Id = c.Id,
+        ParentCategoryId = c.ParentCategoryId,
+        Name = c.Name,
+        Slug = c.Slug,
+        Description = c.Description,
+        ImageUrl = c.ImageUrl,
+        SortOrder = c.SortOrder,
+        IsActive = c.IsActive,
+        CreatedAtUtc = c.CreatedAtUtc,
+        UpdatedAtUtc = c.UpdatedAtUtc,
+    };
 
     public Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
         db.Categories.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
