@@ -1,10 +1,12 @@
 namespace Marketplace.Catalog.Api.Contracts;
 
-public sealed record CreateCategoryRequest(
-    string Name,
-    string? Slug,
-    Guid? ParentCategoryId,
-    string? Description,
-    string? ImageUrl,
-    int SortOrder = 0,
-    bool IsActive = true);
+public sealed class CreateCategoryRequest
+{
+    public required string Name { get; set; }
+    public string? Slug { get; set; }
+    public Guid? ParentCategoryId { get; set; }
+    public string? Description { get; set; }
+    public string? ImageUrl { get; set; }
+    public int SortOrder { get; set; }
+    public bool IsActive { get; set; } = true;
+}

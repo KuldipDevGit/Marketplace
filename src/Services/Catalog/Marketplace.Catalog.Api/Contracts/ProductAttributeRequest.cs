@@ -1,3 +1,7 @@
 namespace Marketplace.Catalog.Api.Contracts;
 
-public sealed record ProductAttributeRequest(string Name, string Value);
+public sealed class ProductAttributeRequest
+{
+    public required string Name { get; set; }
+    public required string Value { get; set; }
+}
