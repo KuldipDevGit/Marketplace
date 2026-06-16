@@ -47,4 +47,23 @@ public static class MessagingExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Registers MassTransit on the in-memory transport — no broker required. Used for local
+    /// standalone development (no RabbitMQ available); production and Aspire use the RabbitMQ overload
+    /// with the transactional outbox.
+    /// </summary>
+    public static IServiceCollection AddMarketplaceMessagingInMemory(
+        this IServiceCollection services,
+        Action<IBusRegistrationConfigurator>? configure = null)
+    {
+        services.AddMassTransit(registration =>
+        {
+            registration.SetKebabCaseEndpointNameFormatter();
+            configure?.Invoke(registration);
+            registration.UsingInMemory((context, cfg) => cfg.ConfigureEndpoints(context));
+        });
+
+        return services;
+    }
 }

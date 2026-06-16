@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Catalog.Infrastructure</RootNamespace>
+    <Description>Catalog infrastructure: EF Core persistence (CatalogDbContext, configurations, audit interceptor, repositories), MassTransit transactional outbox, and DI wiring (ADR-0004, ADR-0005, ADR-0008).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Marketplace.Catalog.Application\Marketplace.Catalog.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus.MassTransit\Marketplace.EventBus.MassTransit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="MassTransit.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <!-- Force the patched System.Security.Cryptography.Xml over the vulnerable 9.0.0 that
+         Microsoft.Data.SqlClient pulls in transitively (SEC-15). -->
+    <PackageReference Include="System.Security.Cryptography.Xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Marketplace.Catalog.IntegrationTests" />
+  </ItemGroup>
+
+</Project>

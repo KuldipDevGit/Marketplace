@@ -1,0 +1,11 @@
+<p-select
+  [options]="options()"
+  [ngModel]="selectedId()"
+  (ngModelChange)="categoryChange.emit($event)"
+  optionLabel="label"
+  optionValue="value"
+  placeholder="All categories"
+  [showClear]="true"
+  ariaLabel="Filter by category"
+  styleClass="category-select"
+/>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Catalog.Api</RootNamespace>
+    <Description>Catalog HTTP API: controllers implementing the OpenAPI contract, Entra JWT auth, ProblemDetails, health, and OpenTelemetry via ServiceDefaults (ADR-0011, api.rules.md).</Description>
+    <!-- Enables `dotnet user-jwts` for local dev tokens; the signing key lives in user-secrets, never in the repo (SEC-9). -->
+    <UserSecretsId>b9e1c7a4-2f63-4d8e-9a05-7c1e3f6b2d40</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Marketplace.Catalog.Application\Marketplace.Catalog.Application.csproj" />
+    <ProjectReference Include="..\Marketplace.Catalog.Infrastructure\Marketplace.Catalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Aspire\Marketplace.ServiceDefaults\Marketplace.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Observability\Marketplace.Observability.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Scalar.AspNetCore" />
+  </ItemGroup>
+
+</Project>
