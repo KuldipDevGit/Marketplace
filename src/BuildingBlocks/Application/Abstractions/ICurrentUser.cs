@@ -1,4 +1,4 @@
-namespace Marketplace.Catalog.Application.Abstractions;
+namespace Marketplace.Application.Abstractions;
 
 /// <summary>
 /// The authenticated caller, projected from the request's access token by the API (ADR-0006).

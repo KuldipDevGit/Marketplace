@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using Marketplace.Catalog.Api.Infrastructure;
 using Marketplace.Catalog.Application;
-using Marketplace.Catalog.Application.Abstractions;
 using Marketplace.Catalog.Infrastructure;
 using Marketplace.Observability;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

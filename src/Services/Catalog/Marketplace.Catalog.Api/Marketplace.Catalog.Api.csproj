@@ -12,6 +12,13 @@
     <ProjectReference Include="..\Marketplace.Catalog.Infrastructure\Marketplace.Catalog.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\Aspire\Marketplace.ServiceDefaults\Marketplace.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\Observability\Marketplace.Observability.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\AspNetCore\Marketplace.AspNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Marketplace.Application" />
+    <Using Include="Marketplace.Application.Abstractions" />
+    <Using Include="Marketplace.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>

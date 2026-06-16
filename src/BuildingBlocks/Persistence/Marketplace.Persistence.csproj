@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Persistence</RootNamespace>
+    <Description>Shared EF Core persistence building blocks reused by every service: the auditable-entity save interceptor that stamps created/updated audit columns from the current user and clock (DB-6).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharedKernel\Marketplace.SharedKernel.csproj" />
+    <ProjectReference Include="..\Application\Marketplace.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+  </ItemGroup>
+
+</Project>

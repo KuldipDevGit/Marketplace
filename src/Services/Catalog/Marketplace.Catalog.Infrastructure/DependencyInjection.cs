@@ -1,7 +1,5 @@
 using Marketplace.Catalog.Application.Abstractions;
-using Marketplace.Catalog.Infrastructure.Messaging;
 using Marketplace.Catalog.Infrastructure.Persistence;
-using Marketplace.Catalog.Infrastructure.Persistence.Interceptors;
 using Marketplace.Catalog.Infrastructure.Persistence.Repositories;
 using Marketplace.EventBus;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +28,6 @@ public static class DependencyInjection
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IBrandRepository, BrandRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
         // When a broker connection string is configured (Aspire/production), publish integration
         // events over RabbitMQ with the transactional outbox. For standalone local development no

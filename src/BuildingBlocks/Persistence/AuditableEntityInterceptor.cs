@@ -1,9 +1,9 @@
-using Marketplace.Catalog.Application.Abstractions;
+using Marketplace.Application.Abstractions;
 using Marketplace.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Marketplace.Catalog.Infrastructure.Persistence.Interceptors;
+namespace Marketplace.Persistence;
 
 /// <summary>Populates audit columns on auditable aggregates as they are saved (DB-6).</summary>
 public sealed class AuditableEntityInterceptor(ICurrentUser currentUser, TimeProvider clock) : SaveChangesInterceptor

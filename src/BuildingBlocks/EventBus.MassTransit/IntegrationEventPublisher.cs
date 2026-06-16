@@ -1,8 +1,8 @@
-using Marketplace.Catalog.Application.Abstractions;
+using Marketplace.Application.Abstractions;
 using Marketplace.Contracts;
 using MassTransit;
 
-namespace Marketplace.Catalog.Infrastructure.Messaging;
+namespace Marketplace.EventBus;
 
 /// <summary>
 /// Publishes integration events through MassTransit. Because the bus is configured with the EF
