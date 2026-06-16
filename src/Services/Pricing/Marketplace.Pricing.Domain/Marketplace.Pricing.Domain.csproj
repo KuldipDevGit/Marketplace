@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Pricing.Domain</RootNamespace>
+    <Description>Pricing domain model: the ProductPrice aggregate that owns a catalog product's list price (ADR-0013). Depends only on the SharedKernel (BE-2, BE-3).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\SharedKernel\Marketplace.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

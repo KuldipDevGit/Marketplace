@@ -11,11 +11,20 @@ var messaging = builder.AddRabbitMQ("messaging")
 var sql = builder.AddSqlServer("sql")
     .WithLifetime(ContainerLifetime.Persistent);
 var catalogDb = sql.AddDatabase("catalogdb");
+var pricingDb = sql.AddDatabase("pricingdb");
 
 // Catalog service (Phase 2): references its own database and the broker, and waits for both to be ready.
 builder.AddProject<Projects.Marketplace_Catalog_Api>("catalog-api")
     .WithReference(catalogDb)
     .WaitFor(catalogDb)
+    .WithReference(messaging)
+    .WaitFor(messaging);
+
+// Pricing service: owns the list price per product (database-per-service), and publishes price
+// changes over the broker. Independent of Catalog at write time — the storefront composes the two.
+builder.AddProject<Projects.Marketplace_Pricing_Api>("pricing-api")
+    .WithReference(pricingDb)
+    .WaitFor(pricingDb)
     .WithReference(messaging)
     .WaitFor(messaging);
 

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Pricing.Application</RootNamespace>
+    <Description>Pricing application layer: CQRS use cases, validators, DTOs, and ports (ADR-0004). Depends only on Domain, SharedKernel, and Contracts — no infrastructure (BE-2).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Marketplace.Pricing.Domain\Marketplace.Pricing.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\SharedKernel\Marketplace.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Marketplace.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+</Project>
