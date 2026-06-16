@@ -15,6 +15,7 @@
 
   <ItemGroup Label="Service projects">
     <ProjectReference Include="..\..\Services\Catalog\Marketplace.Catalog.Api\Marketplace.Catalog.Api.csproj" />
+    <ProjectReference Include="..\..\Services\Pricing\Marketplace.Pricing.Api\Marketplace.Pricing.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup Label="Security audit exception (SEC-15)">

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Pricing.Api</RootNamespace>
+    <Description>Pricing HTTP API: controllers implementing the OpenAPI contract, Entra JWT auth, ProblemDetails, health, and OpenTelemetry via ServiceDefaults (ADR-0011, api.rules.md).</Description>
+    <!-- Enables `dotnet user-jwts` for local dev tokens; the signing key lives in user-secrets, never in the repo (SEC-9). -->
+    <UserSecretsId>f3a7c2e9-1b84-4d6a-9c05-2e7f1a3b6d51</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Marketplace.Pricing.Application\Marketplace.Pricing.Application.csproj" />
+    <ProjectReference Include="..\Marketplace.Pricing.Infrastructure\Marketplace.Pricing.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Aspire\Marketplace.ServiceDefaults\Marketplace.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>
