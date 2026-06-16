@@ -1,10 +1,11 @@
 using System.Security.Claims;
-using Marketplace.Catalog.Application.Abstractions;
+using Marketplace.Application.Abstractions;
+using Microsoft.AspNetCore.Http;
 
-namespace Marketplace.Catalog.Api.Infrastructure;
+namespace Marketplace.AspNetCore;
 
 /// <summary>Projects the authenticated caller from the request's JWT claims (ADR-0006, SEC-6).</summary>
-internal sealed class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICurrentUser
+public sealed class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICurrentUser
 {
     private ClaimsPrincipal? Principal => httpContextAccessor.HttpContext?.User;
 

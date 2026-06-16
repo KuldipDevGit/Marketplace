@@ -1,3 +1,4 @@
+using Marketplace.Application.Abstractions;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +46,8 @@ public static class MessagingExtensions
             });
         });
 
+        services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
+
         return services;
     }
 
@@ -63,6 +66,8 @@ public static class MessagingExtensions
             configure?.Invoke(registration);
             registration.UsingInMemory((context, cfg) => cfg.ConfigureEndpoints(context));
         });
+
+        services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
         return services;
     }

@@ -1,6 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
-using Marketplace.Catalog.Application.Abstractions;
+using Marketplace.Catalog.Application;
 using Marketplace.Catalog.Domain.Products;
 using NetArchTest.Rules;
 using Xunit;
@@ -14,7 +14,7 @@ namespace Marketplace.Catalog.ArchitectureTests;
 public class CleanArchitectureTests
 {
     private static readonly Assembly DomainAssembly = typeof(Product).Assembly;
-    private static readonly Assembly ApplicationAssembly = typeof(IUnitOfWork).Assembly;
+    private static readonly Assembly ApplicationAssembly = typeof(DependencyInjection).Assembly;
 
     private const string Application = "Marketplace.Catalog.Application";
     private const string Infrastructure = "Marketplace.Catalog.Infrastructure";

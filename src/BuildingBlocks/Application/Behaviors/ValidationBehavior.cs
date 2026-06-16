@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Marketplace.Catalog.Application.Common.Behaviors;
+namespace Marketplace.Application.Behaviors;
 
 /// <summary>
 /// MediatR pipeline behavior that runs all FluentValidation validators for a request before the

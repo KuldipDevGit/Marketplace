@@ -16,4 +16,9 @@
     <ProjectReference Include="..\..\src\Services\Catalog\Marketplace.Catalog.Api\Marketplace.Catalog.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="Marketplace.Application" />
+    <Using Include="Marketplace.Application.Abstractions" />
+  </ItemGroup>
+
 </Project>

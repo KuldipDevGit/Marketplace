@@ -1,5 +1,5 @@
 using FluentValidation;
-using Marketplace.Catalog.Application.Common.Behaviors;
+using Marketplace.Application.Behaviors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

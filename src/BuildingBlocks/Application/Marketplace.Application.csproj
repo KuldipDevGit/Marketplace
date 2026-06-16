@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Marketplace.Application</RootNamespace>
+    <Description>Shared application building blocks reused by every service's application layer: the CQRS validation pipeline, application exceptions, paging, and the ICurrentUser / IUnitOfWork / IIntegrationEventPublisher ports (ADR-0004, BE-2). No infrastructure dependencies.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Marketplace.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="FluentValidation" />
+  </ItemGroup>
+
+</Project>

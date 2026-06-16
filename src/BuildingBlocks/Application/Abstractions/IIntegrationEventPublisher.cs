@@ -1,6 +1,6 @@
 using Marketplace.Contracts;
 
-namespace Marketplace.Catalog.Application.Abstractions;
+namespace Marketplace.Application.Abstractions;
 
 /// <summary>
 /// Publishes an integration event to the bus. The infrastructure implementation stages it in the

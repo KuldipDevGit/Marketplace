@@ -8,6 +8,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Marketplace.Catalog.Application\Marketplace.Catalog.Application.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\EventBus.MassTransit\Marketplace.EventBus.MassTransit.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Persistence\Marketplace.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Marketplace.Application" />
+    <Using Include="Marketplace.Application.Abstractions" />
+    <Using Include="Marketplace.Persistence" />
   </ItemGroup>
 
   <ItemGroup>

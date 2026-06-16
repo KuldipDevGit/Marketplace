@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Marketplace.Catalog.Api.Infrastructure;
+namespace Marketplace.AspNetCore;
 
 /// <summary>
 /// Adds a Bearer (JWT) security scheme to the OpenAPI document so the Scalar reference renders an
@@ -11,7 +11,7 @@ namespace Marketplace.Catalog.Api.Infrastructure;
 /// (see docs/local-auth.md); production uses Entra External ID (SEC-4). This documents how to
 /// authenticate — it does not change token validation.
 /// </summary>
-internal sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider schemeProvider) : IOpenApiDocumentTransformer
+public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider schemeProvider) : IOpenApiDocumentTransformer
 {
     private const string SchemeId = "Bearer";
 

@@ -1,13 +1,15 @@
 using FluentValidation;
-using Marketplace.Catalog.Application.Common;
+using Marketplace.Application;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace Marketplace.Catalog.Api.Infrastructure;
+namespace Marketplace.AspNetCore;
 
 /// <summary>Maps application exceptions to RFC 7807 ProblemDetails responses (API-4, API-6).</summary>
-internal sealed partial class GlobalExceptionHandler(
+public sealed partial class GlobalExceptionHandler(
     IProblemDetailsService problemDetailsService,
     ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {

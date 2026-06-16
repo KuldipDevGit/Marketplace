@@ -1,4 +1,4 @@
-namespace Marketplace.Catalog.Application.Common;
+namespace Marketplace.Application;
 
 /// <summary>A requested resource does not exist. Mapped to HTTP 404 by the API (API-4).</summary>
 public sealed class NotFoundException(string message) : Exception(message);

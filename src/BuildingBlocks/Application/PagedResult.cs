@@ -1,4 +1,4 @@
-namespace Marketplace.Catalog.Application.Common;
+namespace Marketplace.Application;
 
 /// <summary>A page of results plus the totals needed to render pagination (API-8).</summary>
 public sealed record PagedResult<T>(IReadOnlyList<T> Items, int Page, int PageSize, long TotalCount)

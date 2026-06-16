@@ -9,6 +9,12 @@
     <ProjectReference Include="..\Marketplace.Catalog.Domain\Marketplace.Catalog.Domain.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\SharedKernel\Marketplace.SharedKernel.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Marketplace.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Application\Marketplace.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Marketplace.Application" />
+    <Using Include="Marketplace.Application.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>
